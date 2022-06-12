@@ -46,6 +46,5 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
         .build()
         .unwrap();
 
-        settings
-            .try_deserialize::<Settings>()
+    settings.try_deserialize::<Settings>()
 }
