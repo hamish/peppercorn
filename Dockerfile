@@ -1,4 +1,4 @@
-FROM rust:1.59.0
+FROM rust:1.59.0 as builder
 
 WORKDIR /app
 
@@ -10,6 +10,12 @@ ENV SQLX_OFFLINE true
 
 RUN cargo build --release
 
+FROM rust:1.59.0-slim as runtime
+
+WORKDIR /app
+
+COPY --from=builder /app/target/release/peppercorn peppercorn
+COPY configuration configuration
 ENV APP_ENVIRONMENT production
 
-ENTRYPOINT ["./target/release/peppercorn"]
+ENTRYPOINT [".peppercorn"]
