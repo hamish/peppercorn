@@ -14,8 +14,7 @@ async fn main() -> std::io::Result<()> {
     let configuration = get_configuration().expect("Filed to get config");
     let connection_pool = PgPoolOptions::new()
         .connect_timeout(std::time::Duration::from_secs(2))
-        .connect_lazy(&configuration.database.connection_string().expose_secret())
-        .expect("Failed to Connect to the DB.");
+        .connect_lazy_with(configuration.database.with_db());
     let address = format!("{}:{}", configuration.application.host, configuration.application.port);
     let listner = TcpListener::bind(address)?;
     run(listner, connection_pool)?.await
