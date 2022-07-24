@@ -86,9 +86,6 @@ impl TryFrom<String> for Environment {
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
-    // let mut settings = config::Config::default();
-    // settings.merge(config::File::with_name("configuration"))?;
-    // settings.try_into()
     let base_path=std::env::current_dir().expect("Unable to determine current directory");
     let configuration_directory = base_path.join("configuration");
     let environment:Environment = std::env::var("APP_ENVIRONMENT")
@@ -107,7 +104,7 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
         ).required(true))
         // Add in settings from the environment (with a prefix of APP)
         // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
-        .add_source(config::Environment::with_prefix("APP"))
+        .add_source(config::Environment::with_prefix("APP").prefix_separator("_").separator("__"))
         .build()
         .unwrap();
 
