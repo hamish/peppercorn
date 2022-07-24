@@ -35,7 +35,16 @@ impl DatabaseSettings {
         options.log_statements(tracing::log::LevelFilter::Trace);
         options
     }
-
+    #[tracing::instrument(
+        name="Database Settings",
+        skip(self),
+        fields(
+            host = %self.host,
+            username = %self.username,
+            port = %self.port,
+            require_ssl= %self.require_ssl
+        ) 
+    )]
     pub fn without_db(&self) -> PgConnectOptions {
         let ssl_mode = if self.require_ssl {
             PgSslMode::Require
